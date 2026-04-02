@@ -1,0 +1,27 @@
+$kind: http-request
+name: 'Get Task by ID (Update)'
+method: PUT
+url: '{{baseUrl}}/tasks/{{taskId}}'
+order: 5000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Updated title",
+      "description": "Updated description"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Task is updated", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.title).to.eql("Updated title");
+          pm.expect(jsonData.description).to.eql("Updated description");
+      });

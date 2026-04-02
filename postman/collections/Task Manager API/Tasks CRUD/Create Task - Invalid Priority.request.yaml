@@ -1,0 +1,26 @@
+$kind: http-request
+name: 'Create Task - Invalid Priority (Edge Case)'
+method: POST
+url: '{{baseUrl}}/tasks'
+order: 3000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Test task",
+      "priority": "urgent"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 400 for invalid priority", function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test("Error message mentions priority", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.error).to.include("priority");
+      });

@@ -1,0 +1,9 @@
+$kind: collection
+name: Task Manager API
+variables:
+  - key: taskId
+    value: ''
+  - key: completeTaskId
+    value: ''
+  - key: assignTaskId
+    value: ''

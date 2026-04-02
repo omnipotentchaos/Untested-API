@@ -1,0 +1,12 @@
+$kind: http-request
+name: 'Delete Non-existent Task (Edge Case)'
+method: DELETE
+url: '{{baseUrl}}/tasks/non-existent-id'
+order: 8000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+          pm.response.to.have.status(404);
+      });

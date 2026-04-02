@@ -1,0 +1,26 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/tasks'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Task to complete",
+      "priority": "high"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 201", function () {
+          pm.response.to.have.status(201);
+      });
+      pm.test("Save task ID", function () {
+          var jsonData = pm.response.json();
+          pm.collectionVariables.set("completeTaskId", jsonData.id);
+          pm.expect(jsonData.priority).to.eql("high");
+      });

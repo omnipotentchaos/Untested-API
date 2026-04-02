@@ -1,0 +1,26 @@
+$kind: http-request
+name: Create Task for Assignment
+method: POST
+url: '{{baseUrl}}/tasks'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Task to assign",
+      "priority": "medium"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 201", function () {
+          pm.response.to.have.status(201);
+      });
+      pm.test("Save task ID for assignment", function () {
+          var jsonData = pm.response.json();
+          pm.collectionVariables.set("assignTaskId", jsonData.id);
+      });

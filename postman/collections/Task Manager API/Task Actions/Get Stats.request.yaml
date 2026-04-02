@@ -1,0 +1,18 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/tasks/stats'
+order: 4000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Stats has expected shape", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property("todo");
+          pm.expect(jsonData).to.have.property("in_progress");
+          pm.expect(jsonData).to.have.property("done");
+          pm.expect(jsonData).to.have.property("overdue");
+      });

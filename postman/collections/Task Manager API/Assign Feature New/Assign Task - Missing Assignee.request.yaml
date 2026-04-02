@@ -1,0 +1,23 @@
+$kind: http-request
+name: 'Assign Task - Missing Assignee'
+method: PATCH
+url: '{{baseUrl}}/tasks/{{assignTaskId}}/assign'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 400", function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test("Error message for missing assignee", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property("error");
+      });

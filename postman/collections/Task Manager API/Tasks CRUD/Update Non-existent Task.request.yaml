@@ -1,0 +1,25 @@
+$kind: http-request
+name: 'Update Non-existent Task (Edge Case)'
+method: PUT
+url: '{{baseUrl}}/tasks/non-existent-id'
+order: 6000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Ghost task"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+          pm.response.to.have.status(404);
+      });
+      pm.test("Error says task not found", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.error).to.eql("Task not found");
+      });

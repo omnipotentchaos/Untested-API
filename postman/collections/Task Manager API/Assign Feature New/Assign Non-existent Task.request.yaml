@@ -1,0 +1,25 @@
+$kind: http-request
+name: Assign Non-existent Task
+method: PATCH
+url: '{{baseUrl}}/tasks/99999/assign'
+order: 5000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "assignee": "john.doe"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+          pm.response.to.have.status(404);
+      });
+      pm.test("Error message for non-existent task", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property("error");
+      });

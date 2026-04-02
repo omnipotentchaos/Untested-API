@@ -1,0 +1,21 @@
+$kind: http-request
+method: PATCH
+url: '{{baseUrl}}/tasks/{{completeTaskId}}/complete'
+order: 2000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Task status is done", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.status).to.eql("done");
+          pm.expect(jsonData).to.have.property("completedAt");
+      });
+      pm.test("BUG: Priority should remain 'high' but gets reset to 'medium'", function () {
+          var jsonData = pm.response.json();
+          // BUG: completeTask() in taskService.js line 69 hardcodes priority: 'medium'
+          pm.expect(jsonData.priority).to.eql("high");
+      });

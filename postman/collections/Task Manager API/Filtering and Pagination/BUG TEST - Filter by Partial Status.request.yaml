@@ -1,0 +1,20 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/tasks'
+order: 2000
+queryParams:
+  - key: status
+    value: do
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("BUG: Partial status 'do' should return empty but matches 'todo' and 'done' due to .includes()", function () {
+          var jsonData = pm.response.json();
+          // This SHOULD return empty array (no status called "do")
+          // BUG: getByStatus uses .includes() instead of === so "do" matches "todo" and "done"
+          pm.expect(jsonData.length).to.eql(0);
+      });

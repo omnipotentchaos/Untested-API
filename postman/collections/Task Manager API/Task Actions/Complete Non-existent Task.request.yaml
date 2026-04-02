@@ -1,0 +1,12 @@
+$kind: http-request
+name: 'Complete Non-existent Task (Edge Case)'
+method: PATCH
+url: '{{baseUrl}}/tasks/non-existent-id/complete'
+order: 3000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 404", function () {
+          pm.response.to.have.status(404);
+      });

@@ -1,0 +1,15 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/tasks'
+order: 4000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Response is an array", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.be.an("array");
+      });

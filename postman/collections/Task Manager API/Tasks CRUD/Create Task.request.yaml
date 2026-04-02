@@ -1,0 +1,31 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/tasks'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Write tests",
+      "description": "Write comprehensive tests for the API",
+      "priority": "high"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 201", function () {
+          pm.response.to.have.status(201);
+      });
+      pm.test("Response has task with id", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property("id");
+          pm.expect(jsonData.title).to.eql("Write tests");
+          pm.expect(jsonData.status).to.eql("todo");
+          pm.expect(jsonData.priority).to.eql("high");
+          pm.expect(jsonData).to.have.property("createdAt");
+          pm.collectionVariables.set("taskId", jsonData.id);
+      });

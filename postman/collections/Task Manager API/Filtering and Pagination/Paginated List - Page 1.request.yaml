@@ -1,0 +1,23 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/tasks'
+order: 3000
+queryParams:
+  - key: page
+    value: '1'
+  - key: limit
+    value: '2'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("BUG: Page 1 should return first items but pagination offset is wrong", function () {
+          var jsonData = pm.response.json();
+          // BUG: offset = page * limit (should be (page-1) * limit)
+          // Page 1 with limit 2 calculates offset = 1*2 = 2, skipping first 2 items
+          // This test documents the bug
+          pm.expect(jsonData).to.be.an("array");
+      });

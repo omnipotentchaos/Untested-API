@@ -1,0 +1,7 @@
+version: v3
+type: environment
+name: Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:3000'
+    enabled: true
