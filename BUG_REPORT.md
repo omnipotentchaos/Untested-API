@@ -19,8 +19,6 @@
 
 **How discovered:** Unit testing `getByStatus('do')` — it incorrectly returned tasks with status `done`.
 
-**Suggested fix:** Replace `t.status.includes(status)` with `t.status === status` on line 9.
-
 **Fix applied:** Changed `.includes()` to `===` for exact status matching.
 
 ---
@@ -49,8 +47,6 @@
 
 **How discovered:** Unit test creating a task with `priority: 'high'`, completing it, and observing the priority was silently changed to `medium`.
 
-**Suggested fix:** Remove `priority: 'medium'` from the spread object in `completeTask`.
-
 **Fix applied:** Removed the `priority: 'medium'` line so the original priority is preserved.
 
 ---
@@ -64,11 +60,5 @@
 **Actual behavior:** The update function uses `{ ...tasks[index], ...fields }`, which allows the caller to pass `{ id: 'new-id' }` and corrupt the task's identity. After such an update, the task can no longer be found by its original ID.
 
 **How discovered:** Unit test that updates a task with `{ id: 'hacked-id' }` — the original ID lookup then returns `undefined`.
-
-**Suggested fix:** Destructure `fields` to exclude protected properties before spreading:
-```js
-const { id: _, createdAt: __, ...safeFields } = fields;
-const updated = { ...tasks[index], ...safeFields };
-```
 
 **Fix applied:** Added destructuring to strip `id` and `createdAt` before merging fields.

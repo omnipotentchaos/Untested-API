@@ -6,6 +6,7 @@
 - Implemented `PATCH /tasks/:id/assign` with validation and tests
 
 ## How to run
+
 ```bash
 cd task-api
 npm install
@@ -17,6 +18,7 @@ npm run coverage
 - `BUG_REPORT.md` — bugs found, root causes, fixes applied
 - `SUBMISSION.md` — coverage output, design notes, questions
 - `task-api/tests/` — all tests
+- `postman/` — Postman collection covering all endpoints and bug-documenting tests
 - `task-api/src/services/taskService.js` — core logic, bug fixes, and new features
 
 ---
