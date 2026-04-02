@@ -172,12 +172,12 @@ describe('PATCH /tasks/:id/complete', () => {
     expect(res.status).toBe(404);
   });
 
-  // BUG: priority is reset to medium on completion
-  it('BUG: resets priority to medium', async () => {
+  // FIXED: priority is now preserved on completion
+  it('should preserve priority on completion', async () => {
     const created = await createTask({ priority: 'high' });
     const res = await request(app).patch(`/tasks/${created.body.id}/complete`);
 
-    expect(res.body.priority).toBe('medium'); // should be 'high'
+    expect(res.body.priority).toBe('high'); // was 'medium' before fix
   });
 });
 

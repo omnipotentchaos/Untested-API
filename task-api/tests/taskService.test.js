@@ -101,19 +101,16 @@ describe('getByStatus', () => {
     expect(taskService.getByStatus('done')).toHaveLength(0);
   });
 
-  // BUG: getByStatus uses status.includes() which is a substring match
-  // For example, status "do" would match "done" because "done".includes("do") === true
-  it('BUG: substring matching — "do" incorrectly matches "done"', () => {
+  // FIXED: getByStatus now uses strict equality (===) instead of .includes()
+  it('should not match substrings after fix', () => {
     const results = taskService.getByStatus('do');
-    // This SHOULD return 0 results (no task has status "do"),
-    // but due to the .includes() bug it returns tasks with status "done"
-    expect(results.length).toBeGreaterThan(0); // confirms the bug exists
+    expect(results).toHaveLength(0);
   });
 
-  // BUG: "in_" would match "in_progress"
-  it('BUG: substring matching — "in_" incorrectly matches "in_progress"', () => {
+  // FIXED: "in_" no longer matches "in_progress"
+  it('should not match partial status "in_"', () => {
     const results = taskService.getByStatus('in_');
-    expect(results.length).toBeGreaterThan(0); // confirms the bug exists
+    expect(results).toHaveLength(0);
   });
 });
 
@@ -217,15 +214,14 @@ describe('update', () => {
     expect(updated.description).toBe('Added');
   });
 
-  // BUG: update allows overwriting protected fields like id and createdAt
-  it('BUG: allows overwriting id via spread', () => {
+  // FIXED: update now strips id and createdAt before merging
+  it('should not allow overwriting id', () => {
     const task = taskService.create({ title: 'Test' });
     const originalId = task.id;
     const updated = taskService.update(originalId, { id: 'hacked-id' });
 
-    expect(updated.id).toBe('hacked-id'); // confirms the bug: id was overwritten
-    // After this, findById with the original id would fail:
-    expect(taskService.findById(originalId)).toBeUndefined();
+    expect(updated.id).toBe(originalId); // id is now protected
+    expect(taskService.findById(originalId)).toBeDefined();
   });
 });
 
@@ -259,13 +255,12 @@ describe('completeTask', () => {
     expect(taskService.completeTask('nonexistent')).toBeNull();
   });
 
-  // BUG: completeTask resets priority to 'medium' regardless of original value
-  it('BUG: resets priority to medium on completion', () => {
+  // FIXED: completeTask now preserves the original priority
+  it('should preserve original priority on completion', () => {
     const task = taskService.create({ title: 'High priority', priority: 'high' });
     const completed = taskService.completeTask(task.id);
 
-    // Should preserve 'high', but bug forces it to 'medium'
-    expect(completed.priority).toBe('medium'); // confirms the bug
+    expect(completed.priority).toBe('high'); // priority is now preserved
   });
 
   it('should update the task in the store', () => {

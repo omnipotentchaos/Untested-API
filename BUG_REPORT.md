@@ -12,6 +12,8 @@
 
 **Suggested fix:** Replace `t.status.includes(status)` with `t.status === status` on line 9.
 
+**Fix applied:** Changed `.includes()` to `===` for exact status matching.
+
 ---
 
 ## Bug 2: `getPaginated` Has Off-By-One Error in Offset Calculation
@@ -40,6 +42,8 @@
 
 **Suggested fix:** Remove `priority: 'medium'` from the spread object in `completeTask`.
 
+**Fix applied:** Removed the `priority: 'medium'` line so the original priority is preserved.
+
 ---
 
 ## Bug 4: `update` Allows Overwriting Protected Fields (`id`, `createdAt`)
@@ -57,3 +61,5 @@
 const { id: _, createdAt: __, ...safeFields } = fields;
 const updated = { ...tasks[index], ...safeFields };
 ```
+
+**Fix applied:** Added destructuring to strip `id` and `createdAt` before merging fields.
