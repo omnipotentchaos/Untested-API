@@ -1,3 +1,11 @@
+/**
+ * Integration tests for API routes
+ * Hits endpoints via supertest: GET/POST/PUT/DELETE /tasks,
+ * along with special /complete and /assign endpoints.
+ *
+ * Bug regression tests are marked with // FIXED:
+ */
+
 const request = require('supertest');
 const app = require('../src/app');
 const taskService = require('../src/services/taskService');

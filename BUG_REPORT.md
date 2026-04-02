@@ -1,5 +1,14 @@
 # Bug Report
 
+| # | Location | Bug | Fixed? |
+|---|----------|-----|--------|
+| 1 | `taskService.js:9` | `getByStatus` uses substring match | ✅ Yes |
+| 2 | `taskService.js:12` | Pagination offset off-by-one | ✅ Yes |
+| 3 | `taskService.js:69` | `completeTask` resets priority to `'medium'` | ✅ Yes |
+| 4 | `taskService.js:50` | `update` allows overwriting `id`/`createdAt` | ✅ Yes |
+
+---
+
 ## Bug 1: `getByStatus` Uses Substring Matching Instead of Exact Match
 
 **Location:** `src/services/taskService.js`, line 9

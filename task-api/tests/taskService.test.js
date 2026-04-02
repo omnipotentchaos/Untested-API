@@ -1,3 +1,11 @@
+/**
+ * Unit tests for taskService.js
+ * Covers: create, getAll, findById, getByStatus, getPaginated,
+ *         getStats, update, remove, completeTask, assignTask
+ *
+ * Bug regression tests are marked with // FIXED:
+ */
+
 const taskService = require('../src/services/taskService');
 
 beforeEach(() => {

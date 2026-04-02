@@ -6,9 +6,11 @@ const getAll = () => [...tasks];
 
 const findById = (id) => tasks.find((t) => t.id === id);
 
+// Bug fix: use strict equality — .includes() caused substring matches (e.g. 'do' matched 'done')
 const getByStatus = (status) => tasks.filter((t) => t.status === status);
 
 const getPaginated = (page, limit) => {
+  // Bug fix: was `page * limit`, which skipped the first page entirely
   const offset = (page - 1) * limit;
   return tasks.slice(offset, offset + limit);
 };
@@ -47,6 +49,7 @@ const update = (id, fields) => {
   const index = tasks.findIndex((t) => t.id === id);
   if (index === -1) return null;
 
+  // Bug fix: strip protected fields so callers can't corrupt id or createdAt
   const { id: _, createdAt: __, ...safeFields } = fields;
   const updated = { ...tasks[index], ...safeFields };
   tasks[index] = updated;
@@ -65,6 +68,7 @@ const completeTask = (id) => {
   const task = findById(id);
   if (!task) return null;
 
+  // Bug fix: removed hardcoded `priority: 'medium'` that silently overwrote task priority
   const updated = {
     ...task,
     status: 'done',
